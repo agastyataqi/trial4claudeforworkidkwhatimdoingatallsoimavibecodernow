@@ -1,2 +1,23 @@
-this is a readme i made because they tell me to but idk what to type
-the purpose of this repo is to be the install path for claude council for the project so i do not need to do it per session
+This repo holds my Claude Code presets — agents, slash commands, and the
+global CLAUDE.md memory file — so I can sync them into any environment
+in a single step.
+
+## Install in any project (one-liner)
+
+Paste this into a Claude Code session, or run it in any shell:
+
+    curl -fsSL https://raw.githubusercontent.com/agastyataqi/trial4claudeforworkidkwhatimdoingatallsoimavibecodernow/main/bootstrap.sh | bash
+
+It pulls the latest `main` and copies into `~/.claude/`:
+
+  - `.claude/agents/`   -> `~/.claude/agents/`
+  - `.claude/commands/` -> `~/.claude/commands/`
+  - `CLAUDE.md`         -> `~/.claude/CLAUDE.md`
+
+Idempotent. Safe to re-run any time to refresh.
+
+## Inside this repo
+
+Working in this repo directly? The `SessionStart` hook in
+`.claude/settings.json` already syncs the same files automatically when
+a session starts, so the one-liner is unnecessary here.
