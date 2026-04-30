@@ -16,8 +16,30 @@ It pulls the latest `main` and copies into `~/.claude/`:
 
 Idempotent. Safe to re-run any time to refresh.
 
+## IMPORTANT: restart Claude Code after running it
+
+Claude Code scans `~/.claude/commands/` and `~/.claude/agents/` **once,
+at session startup**, to build the slash-command registry. Files that
+arrive after that scan — including files copied by the one-liner — will
+**not** appear as `/commands` in the current session.
+
+Workflow:
+
+  1. Open Claude Code in the new project.
+  2. Run the one-liner above as your first prompt.
+  3. **Close Claude Code and reopen it.**
+  4. Slash commands (`/council`, `/done`, etc.) and the CLAUDE.md memory
+     are now active. They stay active for every future session in that
+     environment — you only do this once per environment.
+
+If you ever need a command in the *same* session you just installed
+into, ask Claude in plain English ("run the council workflow on X") —
+Claude can read the command file directly without going through the
+slash registry.
+
 ## Inside this repo
 
 Working in this repo directly? The `SessionStart` hook in
 `.claude/settings.json` already syncs the same files automatically when
-a session starts, so the one-liner is unnecessary here.
+a session starts, so the one-liner is unnecessary here. The same
+restart caveat applies if `~/.claude/` was empty before this session.
