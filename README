@@ -2,7 +2,12 @@ This repo holds my Claude Code presets — agents, slash commands, and the
 global CLAUDE.md memory file — so I can sync them into any environment
 in a single step.
 
-## Install in any project (one-liner)
+Two install paths, depending on what you want:
+
+  - `bootstrap.sh`    -> one-shot manual sync into `~/.claude/`
+  - `install-hook.sh` -> per-project hook that auto-syncs every session
+
+## Path 1: One-shot manual install
 
 Paste this into a Claude Code session, or run it in any shell:
 
@@ -16,8 +21,56 @@ It pulls the latest `main` and copies into `~/.claude/`:
 
 Idempotent. Safe to re-run any time to refresh.
 
+### Caveat: restart Claude Code after running it
+
+Claude Code scans `~/.claude/commands/` and `~/.claude/agents/` **once,
+at session startup**, to build the slash-command registry. Files that
+arrive after that scan — including files copied by this one-liner —
+will **not** appear as `/commands` in the current session.
+
+Workflow:
+
+  1. Open Claude Code in the new project.
+  2. Run the one-liner above as your first prompt.
+  3. **Close Claude Code and reopen it.**
+  4. Slash commands and CLAUDE.md memory are now active in the new session.
+
+If you ever need a command in the *same* session you just installed
+into, ask Claude in plain English ("run the council workflow on X") —
+Claude can read the command file directly without going through the
+slash registry.
+
+## Path 2: Per-project hook (recommended for projects you reuse)
+
+Run this **once per project repo** to drop a `SessionStart` hook into
+the project's `.claude/settings.json`. From then on, every session in
+that project auto-syncs presets at startup — no manual prompt needed.
+
+    curl -fsSL https://raw.githubusercontent.com/agastyataqi/trial4claudeforworkidkwhatimdoingatallsoimavibecodernow/main/install-hook.sh | bash
+
+Behaviour:
+
+  - If `.claude/settings.json` does not exist: creates it with the hook.
+  - If it exists and `jq` is installed: merges the hook in idempotently.
+  - If it exists and `jq` is missing: prints the hook block for you to
+    paste in manually.
+
+After running, **commit `.claude/settings.json`** so the hook follows
+the repo across machines and collaborators.
+
+### Why this fixes the disappearing-commands problem
+
+On Claude Code on the web, each session lives in its own container.
+`~/.claude/` survives only as long as the parent session it was
+populated in. Delete that session and new sessions start clean.
+
+A `SessionStart` hook re-runs in every session — it re-fetches the
+presets from `main` on startup, so you never depend on a parent
+session's filesystem state. Hooks also fire **before** the
+slash-command registry scan, so commands are available immediately —
+no restart needed.
+
 ## Inside this repo
 
-Working in this repo directly? The `SessionStart` hook in
-`.claude/settings.json` already syncs the same files automatically when
-a session starts, so the one-liner is unnecessary here.
+This repo's own `.claude/settings.json` already has the hook, so
+working here just works out of the box.
