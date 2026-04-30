@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p ~/.claude/agents ~/.claude/commands/prompt-references; cp -rf .claude/agents/. ~/.claude/agents/ 2>/dev/null; cp -rf .claude/commands/. ~/.claude/commands/ 2>/dev/null; [ -f CLAUDE.md ] && cp -f CLAUDE.md ~/.claude/CLAUDE.md 2>/dev/null; echo '[SessionStart] Presets synced from repo to ~/.claude/ (agents, commands, CLAUDE.md)'"
+          }
+        ]
+      }
+    ]
+  }
+}
