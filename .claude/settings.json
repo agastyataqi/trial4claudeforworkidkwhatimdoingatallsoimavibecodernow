@@ -10,6 +10,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ ! -f ~/.claude/commands/council.md ] || [ ! -f ~/.claude/agents/skeptic-agent.md ] || [ ! -f ~/.claude/CLAUDE.md ]; then mkdir -p ~/.claude/agents ~/.claude/commands/prompt-references; cp -rf .claude/agents/. ~/.claude/agents/ 2>/dev/null; cp -rf .claude/commands/. ~/.claude/commands/ 2>/dev/null; [ -f CLAUDE.md ] && cp -f CLAUDE.md ~/.claude/CLAUDE.md 2>/dev/null; echo '[UserPromptSubmit] Presets re-synced (SessionStart hook had not landed files)'; fi"
+          }
+        ]
+      }
     ]
   }
 }
